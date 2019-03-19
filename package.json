@@ -1,0 +1,33 @@
+{
+  "name": "pm-rekognition",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node-dev --respawn --transpileOnly ./bin/start-server.ts",
+    "prod": "tsc && node ./dist/app.js"
+  },
+  "dependencies": {
+    "debug": "^2.6.9",
+    "express": "^4.16.0",
+    "facenet": "^0.10.3",
+    "flash-store": "^0.1.2",
+    "morgan": "^1.9.0",
+    "numjs": "^0.14.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/morgan": "^1.7.35",
+    "@types/node": "^10.1.2",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "typescript": "^2.6.1"
+  },
+  "engines": {
+    "node": "^10.1.2"
+  },
+  "author": {
+    "name": "Sarfaraz Iraqui",
+    "email": "sarfarazghlm@gmail.com"
+  },
+  "license": "GPL-3.0"
+}
