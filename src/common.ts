@@ -2,16 +2,16 @@
   * A rectangular bounding box over a detected object
   */
 class BoundingBox {
-    x: number /** Top left x coordinate */
-    y: number /** Top left y coordinate */
-    w: number /** width */
-    h: number /** height */
+    Left: number /** Top left x coordinate */
+    Top: number /** Top left y coordinate */
+    Width: number /** width */
+    Height: number /** height */
 
     constructor(topLeftX: number, topLeftY: number, width: number, height:number) {
-        this.x = topLeftX;
-        this.y = topLeftY;
-        this.w = width;
-        this.h = height;
+        this.Left = topLeftX;
+        this.Top = topLeftY;
+        this.Width = width;
+        this.Height = height;
     }
 }
 
