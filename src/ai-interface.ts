@@ -19,6 +19,8 @@ export interface FaceDetector {
       * Numerically find similarity between two faces
       * @param face1 ImageData of aligned face
       * @param face2 ImageData of aligned face
+      * @param theshold similarity threshold
+      * @returns float between [0,1] indicating similarity between two faces
       */
-     similarity(face1: ImageData, face2: ImageData): Promise<number>
+     similarity(face1: ImageData, face2: ImageData, threshold: number): Promise<number>
  }
