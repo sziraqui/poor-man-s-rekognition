@@ -68,3 +68,6 @@ public/data
 
 # npm generated json
 package-lock.json
+
+# transpiled code
+dist
