@@ -2,10 +2,11 @@
   "name": "pm-rekognition",
   "version": "0.0.0",
   "private": true,
+  "main": "./dist/bin/start-server.js",
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpileOnly ./bin/start-server.ts",
-    "prod": "tsc && node ./dist/app.js"
+    "start": "tsc && node ./dist/bin/start-server.js"
   },
   "dependencies": {
     "canvas": "^2.0.1",
