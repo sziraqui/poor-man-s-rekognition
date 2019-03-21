@@ -8,6 +8,7 @@
     "prod": "tsc && node ./dist/app.js"
   },
   "dependencies": {
+    "canvas": "^2.0.1",
     "debug": "^2.6.9",
     "express": "^4.16.0",
     "facenet": "^0.10.3",

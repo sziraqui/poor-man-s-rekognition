@@ -11,7 +11,8 @@
         "forceConsistentCasingInFileNames": true,
         "noLib": false,
         "lib": [
-            "esnext"
+            "esnext",
+            "dom"
         ]
     },
     "exclude": [
@@ -19,6 +20,11 @@
         "dist",
         "build",
         ".vscode",
-        "docs"
+        "docs",
+        "manual-tests"
+    ],
+    "include": [
+        "bin/*.ts",
+        "src/**/*.ts",
     ]
 }
