@@ -3,11 +3,13 @@ import * as logger from "morgan";
 import * as bodyParser from "body-parser";
 
 import {indexRouter} from './routes/index';
+import { FaceDetection, FaceVerification } from "./ai-bridge/face-analytics";
 import { faceDetection } from './services/face-detection';
-import { FaceDetection } from "./ai-bridge/face-analytics";
+import { compareFaces } from "./services/compare-faces";
 
 let initAI = async () => {
     await FaceDetection.getInstance();
+    await FaceVerification.getInstance();
 }
 
 initAI()
@@ -26,6 +28,6 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use('/', indexRouter);
 /** API endpoints */
 app.use('/api/face-detection', faceDetection);
-
+app.use('/api/compare-faces', compareFaces);
 
 export const App: express.Application = app;

@@ -113,7 +113,7 @@ export class FaceVerification implements FaceVerifier {
             this.findLargestFace(image2)
         ]);
         let distance: number = faces[0].distance(faces[1]);
-        console.log('distance', distance);
+        
         return this.confidence(distance, threshold);
     }
 
