@@ -41,9 +41,10 @@ export class CBoundingBox {
 
 export class CComparedFace {
     BoundingBox: CBoundingBox
-
-    constructor(faceBbox: CBoundingBox) {
+    Confidence: number
+    constructor(faceBbox: CBoundingBox, confidence) {
         this.BoundingBox = faceBbox;
+        this.Confidence = confidence;
     }
 }
 
