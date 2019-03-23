@@ -10,7 +10,8 @@
 import * as nj from "numjs";
 import { Facenet, Face } from "facenet";
 import { FaceDetector, FaceVerifier } from "../ai-interface";
-import { BoundingBox } from "../common";
+import { CBoundingBox, CComparedFace, CFaceDetail } from "../utils/amazon-rekog-dtypes";
+import { DetectFacesResponse } from "../utils/service-syntax";
 
 /**
  * Facenet Singleton to ensure only one instance of Facenet is present
@@ -54,16 +55,16 @@ export class FaceDetection implements FaceDetector {
     }
     /**
      * Find bounding box of all faces present in image
-     * @param image any image that may contain a face
-     * @returns Promise<BoundingBox[]>
+     * @param image any image that may contain face(s) 
      */
-    async detectAll(image: ImageData) {
+    async detectFaces(image: ImageData): Promise<DetectFacesResponse> {
         let faces = await this.facenet.align(image);
-        let bboxList: BoundingBox[] = new Array<BoundingBox>(faces.length);
+        let faceDetails: CFaceDetail[] = new Array<CFaceDetail>(faces.length);
         faces.forEach((face, index) => { 
-            bboxList[index] = new BoundingBox(face.location.x, face.location.y, face.location.w, face.location.h);
+            faceDetails[index] = new CFaceDetail(new CBoundingBox(face.location, face.width, face.height), face.confidence);
         });
-        return bboxList;
+        const response: DetectFacesResponse = new DetectFacesResponse(faceDetails, "ROTATE_0");
+        return response;
     }
 }
 
@@ -102,10 +103,7 @@ export class FaceVerification implements FaceVerifier {
         return faces[largestIndex];
     }
     /**
-     * Find probability that largest face in image1 and image2 are similar
-     * @param image1 
-     * @param image2 
-     * @param threshold 
+     * @implements FaceVerifier.similarity()
      */
     public async similarity(image1: ImageData, image2: ImageData, threshold: number): Promise<number> {
         let faces = await Promise.all([
@@ -115,6 +113,41 @@ export class FaceVerification implements FaceVerifier {
         let distance: number = faces[0].distance(faces[1]);
         
         return this.confidence(distance, threshold);
+    }
+    
+    private async findAllfaces(image: ImageData): Promise<Face[]> {
+        let faces:Face[] = await this.facenet.align(image);
+        
+        for (let i in faces) {
+            faces[i].embedding = await this.facenet.embedding(faces[i]);
+            console.log(`findAllfaces:[${i}]embedding ${faces[i].confidence}:${faces[i].embedding}`);
+        }
+        return faces;
+    }
+
+    /**
+     * @implements FaceVerifier.similarityMulti()
+     */
+    public async similarityMulti(source: ImageData, target: ImageData, threshold: number): Promise<CComparedFace[]> {
+        const output = await Promise.all([
+            this.findLargestFace(source), 
+            this.findAllfaces(target)
+        ]);
+        let sourceFace: Face = output[0];
+        let targetFaces: Face[] = output[1];
+        let distances: number[] = this.facenet.distance(sourceFace, targetFaces);
+        let confidences:number[] = new Array<number>(distances.length);
+        distances.forEach((d, i) => {
+            confidences[i] = this.confidence(d, threshold);
+        });
+        let comparedFaces = new Array<CComparedFace>(targetFaces.length);
+        targetFaces.forEach((face, i) => {
+            comparedFaces[i] = new CComparedFace(
+                new CBoundingBox(face.location, target.width, target.height),
+                confidences[i]
+            )
+        });
+        return comparedFaces;
     }
 
     /**
