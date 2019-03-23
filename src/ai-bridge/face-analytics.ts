@@ -10,8 +10,8 @@
 import * as nj from "numjs";
 import { Facenet, Face } from "facenet";
 import { FaceDetector, FaceVerifier } from "../ai-interface";
-import { CBoundingBox, CComparedFace, CFaceDetail } from "../utils/amazon-rekog-dtypes";
-import { DetectFacesResponse } from "../utils/service-syntax";
+import { CBoundingBox, CComparedFace, CFaceDetail, CFaceMatch, CComparedSourceImage } from "../utils/amazon-rekog-dtypes";
+import { DetectFacesResponse, CompareFacesResponse } from "../utils/service-syntax";
 
 /**
  * Facenet Singleton to ensure only one instance of Facenet is present
@@ -75,6 +75,9 @@ export class FaceVerification implements FaceVerifier {
     private facenet: Facenet;
     private static instance: FaceVerification;
     private static notInitialised: boolean = true;
+
+    public static readonly DISTANCE_THRESHOLD: number = 1.1;
+
     private constructor(){}
     
     public static async getInstance() {
@@ -128,7 +131,7 @@ export class FaceVerification implements FaceVerifier {
     /**
      * @implements FaceVerifier.similarityMulti()
      */
-    public async similarityMulti(source: ImageData, target: ImageData, threshold: number): Promise<CComparedFace[]> {
+    public async similarityMulti(source: ImageData, target: ImageData, similarityThreshold: number): Promise<CompareFacesResponse> {
         const output = await Promise.all([
             this.findLargestFace(source), 
             this.findAllfaces(target)
@@ -136,18 +139,33 @@ export class FaceVerification implements FaceVerifier {
         let sourceFace: Face = output[0];
         let targetFaces: Face[] = output[1];
         let distances: number[] = this.facenet.distance(sourceFace, targetFaces);
-        let confidences:number[] = new Array<number>(distances.length);
-        distances.forEach((d, i) => {
-            confidences[i] = this.confidence(d, threshold);
-        });
-        let comparedFaces = new Array<CComparedFace>(targetFaces.length);
+        let similarities:number[] = new Array<number>(distances.length);
+        for (let i in distances) {
+            similarities[i] = this.confidence(distances[i], FaceVerification.DISTANCE_THRESHOLD);
+        }
+        similarityThreshold/=100;
+        let faceMatches: CFaceMatch[] = Array<CFaceMatch>();
+        let unmatchedFaces: CComparedFace[] = Array<CComparedFace>();
         targetFaces.forEach((face, i) => {
-            comparedFaces[i] = new CComparedFace(
-                new CBoundingBox(face.location, target.width, target.height),
-                confidences[i]
-            )
+            let comparedFace = new CComparedFace(new CBoundingBox(face.location, target.width, target.height), face.confidence);
+            if (similarities[i] >= similarityThreshold) {
+                let faceMatch = new CFaceMatch(comparedFace, similarities[i]);
+                faceMatches.push(faceMatch);
+            } else {
+                unmatchedFaces.push(comparedFace);
+            }
         });
-        return comparedFaces;
+        faceMatches.sort((a, b) => b.Similarity - a.Similarity);
+        unmatchedFaces.sort((a, b) => b.Confidence - a.Confidence);
+
+        const response: CompareFacesResponse = new CompareFacesResponse(
+            faceMatches,
+            new CComparedSourceImage(new CBoundingBox(sourceFace.location, sourceFace.width, sourceFace.height), sourceFace.confidence),
+            "ROTATE_0",
+            "ROTATE_0",
+            unmatchedFaces
+        );
+        return response;
     }
 
     /**

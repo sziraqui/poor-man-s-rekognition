@@ -1,4 +1,5 @@
-import { CComparedFace, CFaceMatch, CFaceDetail } from "./amazon-rekog-dtypes";
+import { CComparedFace, CFaceMatch, CFaceDetail, CComparedSourceImage } from "./amazon-rekog-dtypes";
+import { timingSafeEqual } from "crypto";
 
 /**
  * This modules prepares the service response/request objects
@@ -15,6 +16,16 @@ export class DetectFacesResponse {
 
 export class CompareFacesResponse {
     FaceMatches: CFaceMatch[]
-    SourceImage: CComparedFace
+    SourceImage: CComparedSourceImage
+    SourceImageOrientationCorrection: string
+    TargetImageOrientationCorrection: string
+    UnmatchedFaces: CComparedFace[]
 
+    constructor(faceMatches, sourceImage, sourceOrientationCorrection, targetOrientationCorrection, unmacthedFaces) {
+        this.FaceMatches = faceMatches;
+        this.SourceImage = sourceImage;
+        this.SourceImageOrientationCorrection = sourceOrientationCorrection;
+        this.TargetImageOrientationCorrection = targetOrientationCorrection;
+        this.UnmatchedFaces = unmacthedFaces;
+    }
 }

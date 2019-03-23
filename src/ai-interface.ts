@@ -5,7 +5,7 @@
  */
 
 import { CBoundingBox, CComparedFace, CFaceDetail } from './utils/amazon-rekog-dtypes';
-import { DetectFacesResponse } from './utils/service-syntax';
+import { DetectFacesResponse, CompareFacesResponse } from './utils/service-syntax';
 
 export interface FaceDetector {
     /**
@@ -31,5 +31,5 @@ export interface FaceDetector {
       * @param target image containing target faces
       * @param threshold similarity threshold [0,1] 
       */
-     similarityMulti(source: ImageData, target: ImageData, threshold: number): Promise<CComparedFace[]>
+     similarityMulti(source: ImageData, target: ImageData, threshold: number): Promise<CompareFacesResponse>
  }

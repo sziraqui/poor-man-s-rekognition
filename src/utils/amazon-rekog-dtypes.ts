@@ -48,6 +48,15 @@ export class CComparedFace {
     }
 }
 
+export class CComparedSourceImage {
+    BoundingBox: CBoundingBox
+    Confidence: number
+    constructor(faceBbox: CBoundingBox, confidence) {
+        this.BoundingBox = faceBbox;
+        this.Confidence = confidence;
+    }
+}
+
 export class CFaceDetail {
     BoundingBox: CBoundingBox
     Confidence: number
