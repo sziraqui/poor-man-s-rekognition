@@ -21,7 +21,7 @@ export class CBoundingBox {
     constructor(rect: Rectangle, parentWidth: number, parentHeight: number) {
         /** See https://docs.aws.amazon.com/rekognition/latest/dg/API_BoundingBox.html  */
         this.Left = rect.x/rect.w;
-        this.Top = rect.y/rect.y;
+        this.Top = rect.y/rect.h;
         this.Width = rect.w/parentWidth;
         this.Height = rect.h/parentHeight;
     }
