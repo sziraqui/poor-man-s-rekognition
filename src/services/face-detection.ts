@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { FaceDetection } from '../ai-bridge/face-analytics';
 import { loadImage, imageToData } from '../utils/imageio';
 import { inherits } from 'util';
-import { BoundingBox } from '../common';
+import { CBoundingBox } from '../utils/amazon-rekog-dtypes';
+import { DetectFacesResponse } from '../utils/service-syntax';
 let router:Router = Router();
 
 let detector:FaceDetection;
@@ -17,8 +18,8 @@ router.get('/from-url', async function(req, res) {
     try {
         const image = await loadImage(imageUrl);
         const imageData = imageToData(image);
-        const bbox = await detector.detectAll(imageData);
-        res.send({Faces: bbox});
+        const detectFacesRes: DetectFacesResponse = await detector.detectFaces(imageData);
+        res.send(JSON.stringify(detectFacesRes));
     } catch(err){
         console.log(err);
         res.sendStatus(500);
@@ -39,8 +40,8 @@ router.post('/from-blob', async function(req, res) {
     try {
         const image = await loadImage(dataUrl);
         const imageData = imageToData(image);
-        const bbox = await detector.detectAll(imageData);
-        res.send({Faces: bbox});
+        const detectFacesRes: DetectFacesResponse = await detector.detectFaces(imageData);
+        res.send(JSON.stringify(detectFacesRes));
     } catch(err){
         console.log(err);
         res.sendStatus(500);

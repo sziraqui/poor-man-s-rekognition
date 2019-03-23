@@ -26,25 +26,9 @@ router.get('/from-url', async function(req, res) {
              loadImage(targetImage)]);
         const sourceImageData = imageToData(htmlImgs[0]);
         const targetImageData = imageToData(htmlImgs[1]);
-        const confidence = await verifier.similarity(sourceImageData, targetImageData, similarityThreshold);
-        const detections = await Promise.all([
-            detector.detectAll(sourceImageData)[0],
-            detector.detectAll(targetImageData)[0]
-        ]);
-        console.log(detections);
-        res.send({
-            FaceMatches: [
-                {
-                    Face: {
-                        "BoundingBox": detections[1],
-                        Confidence: confidence
-                    }
-                }
-            ],
-            SourceImageFace: {
-                "BoundingBox": detections[0]
-            }
-        });
+        let comparedFaces = await verifier.similarityMulti(sourceImageData, targetImageData, similarityThreshold);
+        console.log(comparedFaces);
+        res.send(JSON.stringify(comparedFaces));
     } catch(err){
         console.log(err);
         res.sendStatus(500);
@@ -75,24 +59,9 @@ router.post('/from-blob', async function(req, res) {
              loadImage(targetImage)]);
         const sourceImageData = imageToData(htmlImgs[0]);
         const targetImageData = imageToData(htmlImgs[1]);
-        const confidence = await verifier.similarity(sourceImageData, targetImageData, similarityThreshold);
-        const detections = await Promise.all([
-            detector.detectAll(sourceImageData)[0],
-            detector.detectAll(targetImageData)[0]
-        ]);
-        res.send({
-            FaceMatches: [
-                {
-                    Face: {
-                        BoundingBox: detections[1],
-                        Confidence: confidence
-                    }
-                }
-            ],
-            SourceImageFace: {
-                BoundingBox: detections[0]
-            }
-        });
+        let comparedFaces = await verifier.similarityMulti(sourceImageData, targetImageData, similarityThreshold);
+        console.log(JSON.stringify(comparedFaces));
+        res.send(comparedFaces);
     } catch(err){
         console.log(err);
         res.sendStatus(500);
