@@ -48,4 +48,4 @@ router.post('/from-blob', async function(req, res) {
     }
 });
 
-export const faceDetection:Router = router;
+export const FaceDetectionService:Router = router;

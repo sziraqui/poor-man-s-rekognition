@@ -123,7 +123,7 @@ export class FaceVerification implements FaceVerifier {
         
         for (let i in faces) {
             faces[i].embedding = await this.facenet.embedding(faces[i]);
-            console.log(`findAllfaces:[${i}]embedding ${faces[i].confidence}:${faces[i].embedding}`);
+            //console.log(`findAllfaces:[${i}]embedding ${faces[i].confidence}:${faces[i].embedding}`);
         }
         return faces;
     }
@@ -131,7 +131,7 @@ export class FaceVerification implements FaceVerifier {
     /**
      * @implements FaceVerifier.similarityMulti()
      */
-    public async similarityMulti(source: ImageData, target: ImageData, similarityThreshold: number): Promise<CompareFacesResponse> {
+    public async compareFaces(source: ImageData, target: ImageData, similarityThreshold: number): Promise<CompareFacesResponse> {
         const output = await Promise.all([
             this.findLargestFace(source), 
             this.findAllfaces(target)
@@ -180,3 +180,4 @@ export class FaceVerification implements FaceVerifier {
         return 1 - nj.sigmoid(distance - threshold, 7).tolist()[0];
     }
 }
+
