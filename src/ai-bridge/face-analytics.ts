@@ -61,7 +61,7 @@ export class FaceDetection implements FaceDetector {
         let faces = await this.facenet.align(image);
         let faceDetails: CFaceDetail[] = new Array<CFaceDetail>(faces.length);
         faces.forEach((face, index) => { 
-            faceDetails[index] = new CFaceDetail(new CBoundingBox(face.location, face.width, face.height), face.confidence);
+            faceDetails[index] = new CFaceDetail(new CBoundingBox(face.location, image.width, image.height), face.confidence);
         });
         const response: DetectFacesResponse = new DetectFacesResponse(faceDetails, "ROTATE_0");
         return response;
