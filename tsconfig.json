@@ -21,10 +21,12 @@
         "build",
         ".vscode",
         "docs",
-        "manual-tests"
+        "manual-tests",
+        "bin/copy-static-assets.ts"
     ],
     "include": [
         "bin/*.ts",
         "src/**/*.ts",
+        "web-demo/*/*"
     ]
 }

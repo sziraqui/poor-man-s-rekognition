@@ -6,7 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpileOnly ./bin/start-server.ts",
-    "start": "tsc && node ./dist/bin/start-server.js"
+    "start": "tsc && npm run copy-static-assets && node ./dist/bin/start-server.js",
+    "copy-static-assets": "ts-node ./bin/copy-static-assets.ts"
   },
   "dependencies": {
     "canvas": "^2.0.1",
@@ -14,6 +15,8 @@
     "express": "^4.16.0",
     "facenet": "^0.10.3",
     "flash-store": "^0.1.2",
+    "hbs": "^4.0.3",
+    "http-errors": "^1.7.2",
     "morgan": "^1.9.0",
     "numjs": "^0.14.0"
   },
@@ -22,6 +25,7 @@
     "@types/morgan": "^1.7.35",
     "@types/node": "^10.1.2",
     "@types/numjs": "^0.14.4",
+    "shelljs": "^0.8.3",
     "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "^2.6.1"
   },

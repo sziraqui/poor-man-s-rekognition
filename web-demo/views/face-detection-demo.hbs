@@ -1,0 +1,96 @@
+<div class="container">
+    <h1 class="display-4">Face Detection</h1>
+    <p class="lead">Detect faces present in a local image file or image link</p>
+    <hr class="my-4">
+    <h2>Local file</h2>
+    <form>
+        <div class="form-group">
+            <label for="imageFile">Image file</label>
+            <input type="file" class="form-control-file" id="imageFile" accept="image/*">
+        </div>
+    </form>
+    <p id="canvas1Title">Source Image canvas</p>
+    <canvas class="container" id="sourceImageCanvas1" alt="Source Image" height="0">Image will be displayed here</canvas>
+    
+    <hr class="my-2">
+    <div class=" border-primary p-16">
+        <h4 class="text-secondary">POST Request</h4>
+        <p>Endpoint: /api/detect-faces/from-blob</p>
+        <h4 class="text-primary">Request Json</h4>
+        <pre><code id="postRequestJson">
+{
+    "Image": { 
+        "Bytes": `Image as base64 DataUrl string`,
+    }
+}
+        </code></pre>
+    </div>
+    <button id="postButton" class="btn btn-primary" href="#" role="button">Run POST request</button>
+    <div class=" border-success p-16">
+        <h4 class="text-success">Response Json</h4>
+        <pre><code id="postRequestJson">
+{
+    "FaceDetails": [ 
+        { 
+            "BoundingBox": { 
+                "Height": number,
+                "Left": number,
+                "Top": number,
+                "Width": number
+            },
+            "Confidence": number
+        }
+    ],
+    "OrientationCorrection": "string"
+}
+        </code></pre>
+    </div>
+    <hr class="my-4">
+    <h2>From url</h2>
+    <form>
+        <div class="form-group">
+            <label for="imageUrl">Choose an image file</label>
+            <input type="text" class="form-control" id="imageUrl">
+        </div>
+    </form>
+    <p id="canvas2Title">Source Image canvas</p>
+    <canvas class="container" id="sourceImageCanvas2" alt="Source Image" height="0">Image will be displayed here</canvas>
+    
+    <hr class="my-2">
+    <div class=" border-primary p-16">
+        <h4 class="text-secondary">GET Request</h4>
+        <p>Endpoint: /api/detect-faces/from-url</p>
+        <pre><code id="getRequestJson">
+        </code></pre>
+        <h4 class="text-primary">Request Params</h4>
+        <pre><code id="getRequestJson">
+{
+    "imageUrl": string
+}
+        </code></pre>
+    </div>
+    <button id="getButton" class="btn btn-primary" href="#" role="button">Run GET request</button>
+    <div class=" border-success p-16"></div>
+        <h4 class="text-success">Response Json</h4>
+        <pre><code id="getRequestJson">
+{
+    "FaceDetails": [ 
+        { 
+            "BoundingBox": { 
+                "Height": number,
+                "Left": number,
+                "Top": number,
+                "Width": number
+            },
+            "Confidence": number
+        }
+    ],
+    "OrientationCorrection": "string"
+}
+        </code></pre>
+    </div>
+    <div class="container  border-info">
+        <p><a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_BoundingBox.html" class="text-secondary">See the interpretation of BoundingBox</a></p>
+        <p><a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectFaces.html">Amazon Face detection API</a></p>
+    </div>
+</div>

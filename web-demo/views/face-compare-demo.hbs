@@ -1,0 +1,162 @@
+<div class="container">
+    <h1 class="display-4">Face Recognition</h1>
+    <p class="lead">Recognise largest face of Source Image among all faces in Target Image</p>
+    <hr class="my-4">
+    <h2>Local file</h2>
+    <form>
+        <div class="form-group">
+            <label for="sourceImageFile">Source Image file</label>
+            <input type="file" class="form-control-file" id="sourceImageFile" accept="image/*">
+            <label for="targetImageFile">Target Image file</label>
+            <input type="file" class="form-control-file" id="targetImageFile" accept="image/*">
+            <label for="similarityThreshold">Similarity threshold</label>
+            <input type="number" class="form-control-file" id="similarityThreshold">
+        </div>
+    </form>
+    <p id="sourceCanvas1Title">Source Image canvas</p>
+    <canvas class="container" id="sourceImageCanvas1" alt="Source Image" height="0">Image will be displayed here</canvas>
+    <p id="targetCanvas2Title">Target Image canvas</p>
+    <canvas class="container" id="targetImageCanvas1" alt="Target Image" height="0">Image will be displayed here</canvas>
+    
+    <hr class="my-2">
+    <div class=" border-primary p-16">
+        <h4 class="text-secondary">POST Request</h4>
+        <p>Endpoint: /api/compare-faces/from-blob</p>
+        <h4 class="text-primary">Request Json</h4>
+        <pre><code id="postRequestJson">
+{
+    "SimilarityThreshold": number,
+    "SourceImage": { 
+        "Bytes": blob
+    },
+    "TargetImage": { 
+        "Bytes": blob
+    }
+}
+        </code></pre>
+    </div>
+    <button id="postButton" class="btn btn-primary" href="#" role="button">Run POST request</button>
+    <div class=" border-success p-16">
+        <h4 class="text-success">Response Json</h4>
+        <pre><code id="postRequestJson">
+{
+    "FaceMatches": [ 
+        { 
+            "Face": { 
+                "BoundingBox": { 
+                "Height": number,
+                "Left": number,
+                "Top": number,
+                "Width": number
+                },
+                "Confidence": number,
+            },
+            "Similarity": number
+        }
+    ],
+    "SourceImageFace": { 
+        "BoundingBox": { 
+            "Height": number,
+            "Left": number,
+            "Top": number,
+            "Width": number
+        },
+        "Confidence": number
+    },
+    "SourceImageOrientationCorrection": "string",
+    "TargetImageOrientationCorrection": "string",
+    "UnmatchedFaces": [ 
+        { 
+            "BoundingBox": { 
+                "Height": number,
+                "Left": number,
+                "Top": number,
+                "Width": number
+            },
+            "Confidence": number
+        }
+    ]
+}
+        </code></pre>
+    </div>
+    <hr class="my-4">
+    <h2>From url</h2>
+    <form>
+        <div class="form-group">
+            <div class="form-group">
+            <label for="sourceImageUrl">Source Image Url</label>
+            <input type="text" class="form-control" id="sourceImageUrl">
+            <label for="targetImageUrl">Target Image Url</label>
+            <input type="text" class="form-control" id="targetImageUrl">
+            <label for="similarityThreshold">Similarity threshold</label>
+            <input type="number" class="form-control" id="similarityThreshold">
+        </div>
+        </div>
+    </form>
+    <p id="sourceCanvas2Title">Source Image canvas</p>
+    <canvas class="container" id="sourceImageCanvas2" alt="Source Image" height="0">Image will be displayed here</canvas>
+    <p id="targetCanvas2Title">Target Image canvas</p>
+    <canvas class="container" id="sourceImageCanvas2" alt="Source Image" height="0">Image will be displayed here</canvas>
+    
+    <hr class="my-2">
+    <div class=" border-primary p-16">
+        <h4 class="text-secondary">GET Request</h4>
+        <p>Endpoint: /api/compare-faces/from-url</p>
+        <h4 class="text-primary">Request Params</h4>
+        <pre><code id="getRequestJson">
+{
+    "similarityThreshold": number,
+    "sourceImage": string,
+    "targetImage": string
+}
+        </code></pre>
+    </div>
+    <button id="getButton" class="btn btn-primary" href="#" role="button">Run GET request</button>
+    <div class=" border-success p-16"></div>
+        <h4 class="text-success">Response Json</h4>
+        <pre><code id="getRequestJson">
+{
+    "FaceMatches": [ 
+        { 
+            "Face": { 
+                "BoundingBox": { 
+                "Height": number,
+                "Left": number,
+                "Top": number,
+                "Width": number
+                },
+                "Confidence": number,
+            },
+            "Similarity": number
+        }
+    ],
+    "SourceImageFace": { 
+        "BoundingBox": { 
+            "Height": number,
+            "Left": number,
+            "Top": number,
+            "Width": number
+        },
+        "Confidence": number
+    },
+    "SourceImageOrientationCorrection": "string",
+    "TargetImageOrientationCorrection": "string",
+    "UnmatchedFaces": [ 
+        { 
+            "BoundingBox": { 
+                "Height": number,
+                "Left": number,
+                "Top": number,
+                "Width": number
+            },
+            "Confidence": number
+        }
+    ]
+}
+        </code></pre>
+    </div>
+    <div class="container  border-info">
+        <p><a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_BoundingBox.html" class="text-secondary">See the interpretation of BoundingBox</a></p>
+        <p><a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_CompareFaces.html">Amazon Face Compare API</a></p>
+    </div>
+</div>
