@@ -4,7 +4,7 @@ import * as bodyParser from "body-parser";
 
 import { indexRouter } from './routes/index';
 import { FaceDetection, FaceVerification } from "./ai-bridge/face-analytics";
-import { FaceDetectionService } from './services/face-detection';
+import { FaceDetectionService } from './services/detect-faces';
 import { CompareFacesService } from "./services/compare-faces";
 
 let initAI = async () => {
