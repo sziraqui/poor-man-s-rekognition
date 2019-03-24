@@ -154,9 +154,9 @@ function addHandlersForPost(apiEndpoint, sourceCtx, targetCtx, btn, sourceFile, 
         if (sourceDataUrl && targetDataUrl && similarityThreshold) {
             var reqBody = preparPostReqBody(sourceDataUrl, targetDataUrl, similarityThreshold);
             requestTarget.innerHTML = prettify(reqBody);
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 makePostRequest(apiEndpoint, reqBody, resolveFetch, responseTarget, sourceCtx, targetCtx);
-            });
+            };
         }
     }
 
@@ -189,9 +189,9 @@ function addHandlersForGet(apiEndpoint, sourceCtx, targetCtx, btn, sourceUrlInp,
         if (sourceUrl && targetUrl && similarityThreshold) {
             var reqParams = prepareGetReqParam(sourceUrl, targetUrl, similarityThreshold)
             requestTarget.innerHTML = prettify(reqParams);
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 makeGetRequest(apiEndpoint, reqParams, resolveFetch, responseTarget, sourceCtx, targetCtx);
-            });
+            };
         }
     }
 

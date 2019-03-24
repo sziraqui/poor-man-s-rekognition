@@ -94,14 +94,14 @@ function showFaces(ctx, resJson) {
 
 function addHandlersForPost(apiEndpoint, ctx, btn, fileTarget, requestTarget, responseTarget) {
     var useDataUrl = (dataUrl) => {
-        btn.addEventListener('click', (e) => {
+        btn.onclick = (e) => {
             requestTarget.innerHTML = prettify({
                 Image: {
                     Bytes: dataUrl
                 }
             });
             makePostRequest(dataUrl, apiEndpoint, resolveFetch, responseTarget, ctx);
-        }); 
+        }; 
     };
     fileTarget.addEventListener('change', (e) => renderImage(ctx, e, useDataUrl), false); 
 }
@@ -112,10 +112,10 @@ function addHandlersForGet(apiEndpoint, ctx, btn, urlInp, requestTarget, respons
         url = urlInp.value;
         renderImageFromUrl(ctx, url);
     });
-    btn.addEventListener('click', (e) => {
+    btn.onclick = (e) => {
         requestTarget.innerHTML = prettify({
             imageUrl: url
         });
         makeGetRequest(apiEndpoint, url, resolveFetch, responseTarget, ctx);
-    });
+    };
 }
