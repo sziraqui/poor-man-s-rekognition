@@ -160,7 +160,7 @@ export class FaceVerification implements FaceVerifier {
 
         const response: CompareFacesResponse = new CompareFacesResponse(
             faceMatches,
-            new CComparedSourceImage(new CBoundingBox(sourceFace.location, sourceFace.width, sourceFace.height), sourceFace.confidence),
+            new CComparedSourceImage(new CBoundingBox(sourceFace.location, source.width, source.height), sourceFace.confidence),
             "ROTATE_0",
             "ROTATE_0",
             unmatchedFaces

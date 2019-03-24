@@ -16,14 +16,14 @@ export class DetectFacesResponse {
 
 export class CompareFacesResponse {
     FaceMatches: CFaceMatch[]
-    SourceImage: CComparedSourceImage
+    SourceImageFace: CComparedSourceImage
     SourceImageOrientationCorrection: string
     TargetImageOrientationCorrection: string
     UnmatchedFaces: CComparedFace[]
 
-    constructor(faceMatches, sourceImage, sourceOrientationCorrection, targetOrientationCorrection, unmacthedFaces) {
+    constructor(faceMatches, sourceImageFace, sourceOrientationCorrection, targetOrientationCorrection, unmacthedFaces) {
         this.FaceMatches = faceMatches;
-        this.SourceImage = sourceImage;
+        this.SourceImageFace = sourceImageFace;
         this.SourceImageOrientationCorrection = sourceOrientationCorrection;
         this.TargetImageOrientationCorrection = targetOrientationCorrection;
         this.UnmatchedFaces = unmacthedFaces;
