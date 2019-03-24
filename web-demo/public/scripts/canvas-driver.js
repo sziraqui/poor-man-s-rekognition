@@ -8,7 +8,7 @@ function setCanvasProp(c, strokeColor, fillColor, alpha, lineWidth, fontSize) {
 }
 
 function drawRect(c, x, y, w, h) {
-    console.log('drawRect', x,y,w,h);
+    //console.log('drawRect', x,y,w,h);
     c.strokeRect(x, y, w, h);
 }
 

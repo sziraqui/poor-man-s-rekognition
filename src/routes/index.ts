@@ -3,7 +3,7 @@ let router:Router = Router();
 
 /* Check if server is running */
 router.get('/', function(req:Request, res:Response) {
-    res.send({'result': 'Server OK'});
+    res.render('index', {title:"Poor Man's Rekognition", navtitle: "Web demo"});
 });
 
 router.get('/face-detection-demo', function(req:Request, res:Response) {

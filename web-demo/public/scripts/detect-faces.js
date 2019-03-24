@@ -16,8 +16,8 @@ function main() {
     
     var ctx1 = canvas1.getContext('2d');
     var ctx2 = canvas2.getContext('2d');
-    setCanvasProp(ctx1, "cyan", "green", 1.0, 2, "16pt serif");
-    setCanvasProp(ctx2, "cyan", "green", 1.0, 2, "16pt serif");
+    setCanvasProp(ctx1, "cyan", "lawngreen", 1.0, 2, "12pt serif");
+    setCanvasProp(ctx2, "cyan", "lawngreen", 1.0, 2, "12pt serif");
     addHandlersForPost('/api/face-detection/from-blob', ctx1, postButton, fileInput, postReq, postRes);
     addHandlersForGet('/api/face-detection/from-url', ctx2, getButton, imageUrl, getReq, getRes)
 }

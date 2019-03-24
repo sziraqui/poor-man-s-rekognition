@@ -1,6 +1,6 @@
 {
   "name": "pm-rekognition",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "main": "./dist/bin/start-server.js",
   "scripts": {

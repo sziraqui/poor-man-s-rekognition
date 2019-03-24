@@ -9,6 +9,7 @@
             <input type="file" class="form-control-file" id="imageFile" accept="image/*">
         </div>
     </form>
+    <button id="postButton" class="btn btn-primary" href="#" role="button">Run POST request</button>
     <p id="canvas1Title">Source Image canvas</p>
     <canvas class="container" id="sourceImageCanvas1" alt="Source Image" height="1">Image will be displayed here</canvas>
     
@@ -25,7 +26,7 @@
 }
         </code></pre>
     </div>
-    <button id="postButton" class="btn btn-primary" href="#" role="button">Run POST request</button>
+   
     <div class=" border-success p-16">
         <h4 class="text-success">Response Json</h4>
         <pre><code id="postResponseJson">
@@ -53,6 +54,7 @@
             <input type="text" class="form-control" id="imageUrl">
         </div>
     </form>
+    <button id="getButton" class="btn btn-primary" href="#" role="button">Run GET request</button>
     <p id="canvas2Title">Source Image canvas</p>
     <canvas class="container" id="sourceImageCanvas2" alt="Source Image" height="1">Image will be displayed here</canvas>
     
@@ -67,7 +69,7 @@
 }
         </code></pre>
     </div>
-    <button id="getButton" class="btn btn-primary" href="#" role="button">Run GET request</button>
+    
     <div class=" border-success p-16"></div>
         <h4 class="text-success">Response Json</h4>
         <pre><code id="getResponseJson">
@@ -88,8 +90,8 @@
         </code></pre>
     </div>
     <div class="container  border-info">
-        <p><a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_BoundingBox.html" class="text-secondary">See the interpretation of BoundingBox</a></p>
-        <p><a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectFaces.html">Amazon Face detection API</a></p>
+        <p>BoundingBox values are ratios not pixels! <a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_BoundingBox.html" class="text-secondary">See the interpretation of BoundingBox</a></p>
+        <p>Request/Response syntax has same specs as <a href="https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectFaces.html">Amazon Face detection API</a></p>
     </div>
 </div>
 <script src="/scripts/canvas-driver.js" defer="true"></script>

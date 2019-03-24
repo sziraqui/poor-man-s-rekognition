@@ -24,10 +24,10 @@ function main() {
     var targetCtx1 = targetCanvas1.getContext('2d');
     var sourceCtx2 = sourceCanvas2.getContext('2d');
     var targetCtx2 = targetCanvas2.getContext('2d');
-    setCanvasProp(sourceCtx1, "cyan", "green", 1.0, 2, "16pt serif");
-    setCanvasProp(sourceCtx2, "cyan", "green", 1.0, 2, "16pt serif");
-    setCanvasProp(targetCtx1, "cyan", "green", 1.0, 2, "16pt serif");
-    setCanvasProp(targetCtx2, "cyan", "green", 1.0, 2, "16pt serif");
+    setCanvasProp(sourceCtx1, "cyan", "lawngreen", 1.0, 2, "12pt serif");
+    setCanvasProp(sourceCtx2, "cyan", "lawngreen", 1.0, 2, "12pt serif");
+    setCanvasProp(targetCtx1, "cyan", "lawngreen", 1.0, 2, "12pt serif");
+    setCanvasProp(targetCtx2, "cyan", "lawngreen", 1.0, 2, "12pt serif");
     addHandlersForPost('/api/compare-faces/from-blob', sourceCtx1, targetCtx1, postButton, sourceImage, targetImage, similarityInp1, postReq, postRes);
     addHandlersForGet('/api/compare-faces/from-url', sourceCtx2, targetCtx2, getButton, sourceImageUrl, targetImageUrl, similarityInp2, getReq, getRes);
 }
@@ -124,7 +124,7 @@ function showFaceMatches(ctx, resJson) {
                 var similarity = faceMatch.Similarity;
                 var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
                 drawRect(ctx, rect.x, rect.y, rect.w, rect.h);
-                putScore(ctx, similarity, "matches", "green", rect);
+                putScore(ctx, similarity, "matches", "lawngreen", rect);
             }
         }
     }
