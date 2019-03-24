@@ -69,30 +69,15 @@ function makeGetRequest(apiEndpoint, imageUrl, onResolve, resolveTarget, ctx) {
 function resolveFetch(resJson, resolveTarget, ctx) {
     //console.log(JSON.stringify(resJson));
     showFaces(ctx, resJson);
-    resolveTarget.innerHTML = syntaxHighlight(resJson);
+    resolveTarget.innerHTML = prettify(resJson);
 }
 
 /** Source: https://stackoverflow.com/a/7220510/6699069 */
-function syntaxHighlight(json) {
+function prettify(json) {
     if (typeof json != 'string') {
-         json = JSON.stringify(json, undefined, 2);
+         return JSON.stringify(json, undefined, 2);
     }
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
+    return json;
 }
 
 function showFaces(ctx, resJson) {
@@ -102,7 +87,7 @@ function showFaces(ctx, resJson) {
         faceDetails.forEach((face, i) => {
             var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
             drawRect(ctx, rect.x, rect.y, rect.w, rect.h);
-            putScore(ctx, face.Confidence, "isFace", "blue", rect);
+            putScore(ctx, face.Confidence, "isFace", "blue", rect, 20, "gray");
         });
     }
 }
@@ -110,7 +95,7 @@ function showFaces(ctx, resJson) {
 function addHandlersForPost(apiEndpoint, ctx, btn, fileTarget, requestTarget, responseTarget) {
     var useDataUrl = (dataUrl) => {
         btn.addEventListener('click', (e) => {
-            requestTarget.innerHTML = syntaxHighlight({
+            requestTarget.innerHTML = prettify({
                 Image: {
                     Bytes: dataUrl
                 }
@@ -128,7 +113,7 @@ function addHandlersForGet(apiEndpoint, ctx, btn, urlInp, requestTarget, respons
         renderImageFromUrl(ctx, url);
     });
     btn.addEventListener('click', (e) => {
-        requestTarget.innerHTML = syntaxHighlight({
+        requestTarget.innerHTML = prettify({
             imageUrl: url
         });
         makeGetRequest(apiEndpoint, url, resolveFetch, responseTarget, ctx);

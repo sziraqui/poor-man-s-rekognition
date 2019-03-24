@@ -76,33 +76,18 @@ function makeGetRequest(apiEndpoint, reqParams, onResolve, resolveTarget, source
 }
 
 function resolveFetch(resJson, resolveTarget, sourceCtx, targetCtx) {
-    //console.log(JSON.stringify(resJson));
+    console.log(resJson);
     showSourceFace(sourceCtx, resJson);
-    resolveTarget.innerHTML = syntaxHighlight(resJson);
+    resolveTarget.innerHTML = prettify(resJson);
     showFaceMatches(targetCtx, resJson);
 }
 
-/** Source: https://stackoverflow.com/a/7220510/6699069 */
-function syntaxHighlight(json) {
+
+function prettify(json) {
     if (typeof json != 'string') {
-         json = JSON.stringify(json, undefined, 2);
+         return JSON.stringify(json, undefined, 2);
     }
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
+    return json;
 }
 
 function showSourceFace(ctx, resJson) {
@@ -111,7 +96,7 @@ function showSourceFace(ctx, resJson) {
     if(sourceFace) {
         var rect = bboxToRect(sourceFace.BoundingBox, ctx.canvas.width, ctx.canvas.height);
         drawRect(ctx, rect.x, rect.y, rect.w, rect.h);
-        putScore(ctx, sourceFace.Confidence, "isFace", "blue", rect);
+        putScore(ctx, sourceFace.Confidence, "isFace", "blue", rect, 16);
     }
 }
 
@@ -124,7 +109,7 @@ function showFaceMatches(ctx, resJson) {
                 var similarity = faceMatch.Similarity;
                 var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
                 drawRect(ctx, rect.x, rect.y, rect.w, rect.h);
-                putScore(ctx, similarity, "matches", "lawngreen", rect);
+                putScore(ctx, similarity, "matches", "lawngreen", rect, -16);
             }
         }
     }
@@ -134,7 +119,7 @@ function showFaceMatches(ctx, resJson) {
             var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
             var confidence = face.Confidence;
             drawRect(ctx, rect.x, rect.y, rect.w, rect.h);
-            putScore(ctx, confidence, "isFace", "blue", rect);
+            putScore(ctx, confidence, "isFace", "blue", rect, 16);
         }
     }
 }
@@ -168,7 +153,7 @@ function addHandlersForPost(apiEndpoint, sourceCtx, targetCtx, btn, sourceFile, 
         
         if (sourceDataUrl && targetDataUrl && similarityThreshold) {
             var reqBody = preparPostReqBody(sourceDataUrl, targetDataUrl, similarityThreshold);
-            requestTarget.innerHTML = syntaxHighlight(reqBody);
+            requestTarget.innerHTML = prettify(reqBody);
             btn.addEventListener('click', (e) => {
                 makePostRequest(apiEndpoint, reqBody, resolveFetch, responseTarget, sourceCtx, targetCtx);
             });
@@ -203,7 +188,7 @@ function addHandlersForGet(apiEndpoint, sourceCtx, targetCtx, btn, sourceUrlInp,
       
         if (sourceUrl && targetUrl && similarityThreshold) {
             var reqParams = prepareGetReqParam(sourceUrl, targetUrl, similarityThreshold)
-            requestTarget.innerHTML = syntaxHighlight(reqParams);
+            requestTarget.innerHTML = prettify(reqParams);
             btn.addEventListener('click', (e) => {
                 makeGetRequest(apiEndpoint, reqParams, resolveFetch, responseTarget, sourceCtx, targetCtx);
             });

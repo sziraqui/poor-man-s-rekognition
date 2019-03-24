@@ -21,7 +21,7 @@ function clearCanvas(context) {
 function bboxToRect(bbox, parentWidth, parentHeight) {
     const wid = bbox.Width*parentWidth;
     const ht = bbox.Height*parentHeight;
-    console.log('bboxToRect', parentWidth, parentWidth);
+    //console.log('bboxToRect', parentWidth, parentWidth);
     return {
        x: Math.round(bbox.Left*wid), 
        y: Math.round(bbox.Top*ht), 
@@ -30,18 +30,19 @@ function bboxToRect(bbox, parentWidth, parentHeight) {
     }
 }
 
-function putTextBelow(c, text, color, rect) {
+function putTextBelow(c, text, color, rect, margin) {
     var ogcolor = c.fillStyle;
     c.fillStyle = color;
     var x = rect.x
-    var y = rect.y + rect.h + 24; // margin of 24px below rect
+    var y = rect.y + rect.h + margin; // eg margin of 24px below rect
+    var bgw = c.measure
     c.fillText(text, x, y);
     c.fillStyle = ogcolor;
 }
 
-function putScore(c, score, label, color, rect) {
+function putScore(c, score, label, color, rect, margin) {
     var text = label + ": " + (score*100).toFixed(2) + " %"
-    putTextBelow(c, text, color, rect);
+    putTextBelow(c, text, color, rect, margin);
 }
 
 /** Source: https://stackoverflow.com/a/23669825/6699069 */
