@@ -37,7 +37,9 @@ function makePostRequest(dataUrl, apiEndpoint, onResolve, resolveTarget, ctx) {
         redirect: "follow",
         body: JSON.stringify(reqBody)
     }).then(
-        response => onResolve(response.json(), resolveTarget, ctx)
+        response => response.json()
+    ).then(
+        resJson => onResolve(resJson, resolveTarget, ctx)
     ).catch(
         err => console.log('makePostRequest:', apiEndpoint, '\n', err)
     );
@@ -55,15 +57,18 @@ function makeGetRequest(imageUrl, apiEndpoint, onResolve, resolveTarget, ctx) {
         },
         redirect: "follow"
     }).then(
-        response => onResolve(response.json(), resolveTarget, ctx)
+        response => response.json()
+    ).then(
+        resJson => onResolve(resJson, resolveTarget, ctx)
     ).catch(
         err => console.log('makeGetRequest:', getUrl, '\n', err)
     );
 }
 
 function resolveFetch(resJson, resolveTarget, ctx) {
-    resolveTarget.innerHTML = syntaxHighlight(resJson);
+    console.log(JSON.stringify(resJson));
     showFaces(ctx, resJson);
+    resolveTarget.innerHTML = syntaxHighlight(resJson);
 }
 
 /** Source: https://stackoverflow.com/a/7220510/6699069 */
@@ -92,7 +97,7 @@ function syntaxHighlight(json) {
 function showFaces(ctx, resJson) {
     faceDetails = resJson.FaceDetails;
     if(faceDetails) {
-        faceDetails.array.forEach((face, i) => {
+        faceDetails.forEach((face, i) => {
             var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
             drawRect(ctx, rect.x, rect.y, rect.w, rect.h);
             putScore(ctx, face.Confidence, "isFace", "blue", rect);
@@ -115,10 +120,15 @@ function addHandlersForPost(apiEndpoint, ctx, btn, fileTarget, requestTarget, re
 }
 
 function addHandlersForGet(apiEndpoint, ctx, btn, urlInp, requestTarget, responseTarget) {
+    var url = null;
+    urlInp.addEventListener('input', () => {
+        url = urlInp.innerHTML;
+        renderImageFromUrl(ctx, url);
+    });
     btn.addEventListener('click', (e) => {
         requestTarget.innerHTML = syntaxHighlight({
             imageUrl: urlInp.innerHTML
         });
-        makeGetRequest(apiEndpoint, urlInp.innerHTML, resolveFetch, responseTarget, ctx);
+        makeGetRequest(apiEndpoint, url, resolveFetch, responseTarget, ctx);
     });
 }

@@ -79,4 +79,12 @@ function renderImage(ctx, e, useDataUrl){
     reader.readAsDataURL(e.target.files[0]);     
 }
 
-
+function renderImageFromUrl(ctx, url) {
+    var img = new Image();
+    img.onload = function(){
+        ctx.canvas.width = img.width;
+        ctx.canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+    }
+    img.src = url;
+}
