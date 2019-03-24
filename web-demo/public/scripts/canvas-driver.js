@@ -1,13 +1,15 @@
 
-function setCanvasProp(c, strokeColor, fillColor, alpha) {
+function setCanvasProp(c, strokeColor, fillColor, alpha, lineWidth, fontSize) {
     c.strokeStyle = strokeColor;
     c.fillStyle = fillColor;
     c.globalAlpha = alpha;
+    c.lineWidth = lineWidth;
+    c.font = fontSize;
 }
 
 function drawRect(c, x, y, w, h) {
-    c.rect(x, y, w, h);
-    c.stroke();
+    console.log('drawRect', x,y,w,h);
+    c.strokeRect(x, y, w, h);
 }
 
 function clearCanvas(context) {
@@ -16,12 +18,12 @@ function clearCanvas(context) {
 }
 
 function bboxToRect(bbox, parentWidth, parentHeight) {
-    const wid = bbox.Width/parentWidth;
-    const ht = bbox.Height/parentHeight;
-
+    const wid = bbox.Width*parentWidth;
+    const ht = bbox.Height*parentHeight;
+    console.log('bboxToRect', parentWidth, parentWidth);
     return {
-       x: Math.round(bbox.Left/wid), 
-       y: Math.round(bbox.Top/ht), 
+       x: Math.round(bbox.Left*wid), 
+       y: Math.round(bbox.Top*ht), 
        w: Math.round(wid), 
        h: Math.round(ht)
     }
@@ -31,13 +33,13 @@ function putTextBelow(c, text, color, rect) {
     var ogcolor = c.fillStyle;
     c.fillStyle = color;
     var x = rect.x
-    var y = Math.round(rect.y + rect.h/2 + 8); // margin of 8px below rect
-    c.fillText(text, x, y, rect.w);
+    var y = rect.y + rect.h + 24; // margin of 24px below rect
+    c.fillText(text, x, y);
     c.fillStyle = ogcolor;
 }
 
 function putScore(c, score, label, color, rect) {
-    var text = label + " " + Math.round(score) + " %"
+    var text = label + ": " + (score*100).toFixed(2) + " %"
     putTextBelow(c, text, color, rect);
 }
 
@@ -69,8 +71,8 @@ function renderImage(ctx, e, useDataUrl){
     reader.onload = function(event){
         var img = new Image();
         img.onload = function(){
-            ctx.canvas.width = img.width;
-            ctx.canvas.height = img.height;
+            resize(ctx, img.width, img.height);
+            clearCanvas(ctx);
             ctx.drawImage(img,0,0);
         }
         img.src = event.target.result;
@@ -82,9 +84,38 @@ function renderImage(ctx, e, useDataUrl){
 function renderImageFromUrl(ctx, url) {
     var img = new Image();
     img.onload = function(){
-        ctx.canvas.width = img.width;
-        ctx.canvas.height = img.height;
+        resize(ctx, img.width, img.height);
+        clearCanvas(ctx);
         ctx.drawImage(img, 0, 0);
     }
     img.src = url;
+}
+/** For Canvas ctx.save, ctx.restore glitch when changing canvas.width or canvas.height directtly 
+ * Ref: https://stackoverflow.com/q/48044951
+*/
+function save(ctx){
+    let props = ['strokeStyle', 'fillStyle', 'globalAlpha', 'lineWidth', 
+    'lineCap', 'lineJoin', 'miterLimit', 'lineDashOffset', 'shadowOffsetX',
+    'shadowOffsetY', 'shadowBlur', 'shadowColor', 'globalCompositeOperation', 
+    'font', 'textAlign', 'textBaseline', 'direction', 'imageSmoothingEnabled'];
+    let state = {}
+    for(let prop of props){
+      state[prop] = ctx[prop];
+    }
+    return state;
+}
+  
+function restore(ctx, state){
+    for(let prop in state){
+      ctx[prop] = state[prop];
+    }
+}
+  /** Must use this wrapper for changing canvas size
+   * Otherwise, all canvas properties will be reset to defaults
+   */
+function resize(ctx, width, height){
+    let state = save(ctx);
+    ctx.canvas.width = width || canvas.width;
+    ctx.canvas.height = height || canvas.height;
+    restore(ctx, state);
 }

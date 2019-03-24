@@ -13,12 +13,12 @@ export class Rectangle {
     }  
     
     public static fromBoundingBox(bbox: CBoundingBox, parentWidth: number, parentHeight: number) {
-        const w = bbox.Width/parentWidth;
-        const h = bbox.Height/parentHeight;
+        const w = bbox.Width*parentWidth;
+        const h = bbox.Height*parentHeight;
 
         return new Rectangle(
-            Math.round(bbox.Left/w), 
-            Math.round(bbox.Top/h), 
+            Math.round(bbox.Left*w), 
+            Math.round(bbox.Top*h), 
             Math.round(w), 
             Math.round(h)
         );

@@ -27,12 +27,12 @@ export class CBoundingBox {
     }
 
     toRect(parentWidth, parentHeight): Rectangle {
-        const w = this.Width/parentWidth;
-        const h = this.Height/parentHeight;
+        const w = this.Width*parentWidth;
+        const h = this.Height*parentHeight;
 
         return new Rectangle(
-            Math.round(this.Left/w), 
-            Math.round(this.Top/h), 
+            Math.round(this.Left*w), 
+            Math.round(this.Top*h), 
             Math.round(w), 
             Math.round(h)
         );

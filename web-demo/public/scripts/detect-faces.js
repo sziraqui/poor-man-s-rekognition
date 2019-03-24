@@ -16,7 +16,8 @@ function main() {
     
     var ctx1 = canvas1.getContext('2d');
     var ctx2 = canvas2.getContext('2d');
-    setCanvasProp(ctx1, "green", "blue", 0.6);
+    setCanvasProp(ctx1, "cyan", "green", 1.0, 2, "16pt serif");
+    setCanvasProp(ctx2, "cyan", "green", 1.0, 2, "16pt serif");
     addHandlersForPost('/api/face-detection/from-blob', ctx1, postButton, fileInput, postReq, postRes);
     addHandlersForGet('/api/face-detection/from-url', ctx2, getButton, imageUrl, getReq, getRes)
 }
@@ -96,6 +97,7 @@ function syntaxHighlight(json) {
 
 function showFaces(ctx, resJson) {
     faceDetails = resJson.FaceDetails;
+    console.log('faceDetails', faceDetails);
     if(faceDetails) {
         faceDetails.forEach((face, i) => {
             var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
