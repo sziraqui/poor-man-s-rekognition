@@ -13,8 +13,9 @@ function drawRect(c, x, y, w, h) {
 }
 
 function clearCanvas(context) {
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    context.beginPath();
+    var state = save(context);
+    context.canvas.width = context.canvas.height;
+    restore(context, state);
 }
 
 function bboxToRect(bbox, parentWidth, parentHeight) {
@@ -71,8 +72,8 @@ function renderImage(ctx, e, useDataUrl){
     reader.onload = function(event){
         var img = new Image();
         img.onload = function(){
-            resize(ctx, img.width, img.height);
             clearCanvas(ctx);
+            resize(ctx, img.width, img.height);
             ctx.drawImage(img,0,0);
         }
         img.src = event.target.result;
@@ -84,8 +85,8 @@ function renderImage(ctx, e, useDataUrl){
 function renderImageFromUrl(ctx, url) {
     var img = new Image();
     img.onload = function(){
-        resize(ctx, img.width, img.height);
         clearCanvas(ctx);
+        resize(ctx, img.width, img.height);
         ctx.drawImage(img, 0, 0);
     }
     img.src = url;
