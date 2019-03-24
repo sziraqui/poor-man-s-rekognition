@@ -15,6 +15,110 @@ function main() {
     var getRes = document.getElementById('getResponseJson');
     
     var ctx1 = canvas1.getContext('2d');
+    var ctx2 = canvas2.getContext('2d');
     setCanvasProp(ctx1, "green", "blue", 0.6);
-    fileInput.addEventListener('change', (e) => renderImage(ctx1, e), false);
+    addHandlersForPost('/api/face-detection/from-blob', ctx1, postButton, fileInput, postReq, postRes);
+    addHandlersForGet('/api/face-detection/from-url', ctx2, getButton, imageUrl, getReq, getRes)
+}
+
+function makePostRequest(dataUrl, apiEndpoint, onResolve, resolveTarget, ctx) {
+    var reqBody = {
+        Image: {
+            Bytes: dataUrl
+        }
+    };
+    fetch(apiEndpoint, {
+        method: "POST",
+        mode: "cors",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        redirect: "follow",
+        body: JSON.stringify(reqBody)
+    }).then(
+        response => onResolve(response.json(), resolveTarget, ctx)
+    ).catch(
+        err => console.log('makePostRequest:', apiEndpoint, '\n', err)
+    );
+}
+
+function makeGetRequest(imageUrl, apiEndpoint, onResolve, resolveTarget, ctx) {
+    var reqParams = "?imageUrl="+imageUrl;
+    var getUrl = apiEndpoint+reqParams;
+    fetch(getUrl, {
+        method: "GET",
+        mode: "cors",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        redirect: "follow"
+    }).then(
+        response => onResolve(response.json(), resolveTarget, ctx)
+    ).catch(
+        err => console.log('makeGetRequest:', getUrl, '\n', err)
+    );
+}
+
+function resolveFetch(resJson, resolveTarget, ctx) {
+    resolveTarget.innerHTML = syntaxHighlight(resJson);
+    showFaces(ctx, resJson);
+}
+
+/** Source: https://stackoverflow.com/a/7220510/6699069 */
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+function showFaces(ctx, resJson) {
+    faceDetails = resJson.FaceDetails;
+    if(faceDetails) {
+        faceDetails.array.forEach((face, i) => {
+            var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
+            drawRect(ctx, rect.x, rect.y, rect.w, rect.h);
+            putScore(ctx, face.Confidence, "isFace", "blue", rect);
+        });
+    }
+}
+
+function addHandlersForPost(apiEndpoint, ctx, btn, fileTarget, requestTarget, responseTarget) {
+    var useDataUrl = (dataUrl) => {
+        btn.addEventListener('click', (e) => {
+            requestTarget.innerHTML = syntaxHighlight({
+                Image: {
+                    Bytes: dataUrl
+                }
+            });
+            makePostRequest(dataUrl, apiEndpoint, resolveFetch, responseTarget, ctx);
+        }); 
+    };
+    fileTarget.addEventListener('change', (e) => renderImage(ctx, e, useDataUrl), false); 
+}
+
+function addHandlersForGet(apiEndpoint, ctx, btn, urlInp, requestTarget, responseTarget) {
+    btn.addEventListener('click', (e) => {
+        requestTarget.innerHTML = syntaxHighlight({
+            imageUrl: urlInp.innerHTML
+        });
+        makeGetRequest(apiEndpoint, urlInp.innerHTML, resolveFetch, responseTarget, ctx);
+    });
 }

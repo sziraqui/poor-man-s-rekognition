@@ -64,7 +64,7 @@ function encodeImageFileAsURL(inputElement, callback) {
 }
 
 /** Source: https://stackoverflow.com/a/10906961/6699069 */
-function renderImage(ctx, e){
+function renderImage(ctx, e, useDataUrl){
     var reader = new FileReader();
     reader.onload = function(event){
         var img = new Image();
@@ -74,7 +74,9 @@ function renderImage(ctx, e){
             ctx.drawImage(img,0,0);
         }
         img.src = event.target.result;
+        useDataUrl(event.target.result);
     }
     reader.readAsDataURL(e.target.files[0]);     
 }
+
 
