@@ -55,7 +55,7 @@ function makePostRequest(apiEndpoint, reqBody, onResolve, resolveTarget, sourceC
 function makeGetRequest(apiEndpoint, reqParams, onResolve, resolveTarget, sourceCtx, targetCtx) {
     var expandUrl = "?";
     for(var key in reqParams) {
-        expandUrl + key + "=" + reqParams[key] + "&"
+        expandUrl = expandUrl + key + "=" + reqParams[key] + "&";
     }
     var getUrl = apiEndpoint+expandUrl.slice(0, expandUrl.length -1);
     fetch(getUrl, {
@@ -200,7 +200,7 @@ function addHandlersForGet(apiEndpoint, sourceCtx, targetCtx, btn, sourceUrlInp,
     var similarityThreshold = null;
 
     var setBtnClick = () => {
-        sourceUrl = dataUrl;
+      
         if (sourceUrl && targetUrl && similarityThreshold) {
             var reqParams = prepareGetReqParam(sourceUrl, targetUrl, similarityThreshold)
             requestTarget.innerHTML = syntaxHighlight(reqParams);
