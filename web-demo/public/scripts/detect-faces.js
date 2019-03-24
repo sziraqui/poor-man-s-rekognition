@@ -46,7 +46,7 @@ function makePostRequest(dataUrl, apiEndpoint, onResolve, resolveTarget, ctx) {
     );
 }
 
-function makeGetRequest(imageUrl, apiEndpoint, onResolve, resolveTarget, ctx) {
+function makeGetRequest(apiEndpoint, imageUrl, onResolve, resolveTarget, ctx) {
     var reqParams = "?imageUrl="+imageUrl;
     var getUrl = apiEndpoint+reqParams;
     fetch(getUrl, {
@@ -67,7 +67,7 @@ function makeGetRequest(imageUrl, apiEndpoint, onResolve, resolveTarget, ctx) {
 }
 
 function resolveFetch(resJson, resolveTarget, ctx) {
-    console.log(JSON.stringify(resJson));
+    //console.log(JSON.stringify(resJson));
     showFaces(ctx, resJson);
     resolveTarget.innerHTML = syntaxHighlight(resJson);
 }
@@ -97,7 +97,7 @@ function syntaxHighlight(json) {
 
 function showFaces(ctx, resJson) {
     faceDetails = resJson.FaceDetails;
-    console.log('faceDetails', faceDetails);
+    //console.log('faceDetails', faceDetails);
     if(faceDetails) {
         faceDetails.forEach((face, i) => {
             var rect = bboxToRect(face.BoundingBox, ctx.canvas.width, ctx.canvas.height);
@@ -124,12 +124,12 @@ function addHandlersForPost(apiEndpoint, ctx, btn, fileTarget, requestTarget, re
 function addHandlersForGet(apiEndpoint, ctx, btn, urlInp, requestTarget, responseTarget) {
     var url = null;
     urlInp.addEventListener('input', () => {
-        url = urlInp.innerHTML;
+        url = urlInp.value;
         renderImageFromUrl(ctx, url);
     });
     btn.addEventListener('click', (e) => {
         requestTarget.innerHTML = syntaxHighlight({
-            imageUrl: urlInp.innerHTML
+            imageUrl: url
         });
         makeGetRequest(apiEndpoint, url, resolveFetch, responseTarget, ctx);
     });
