@@ -3,6 +3,7 @@ import * as logger from "morgan";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 import * as showError from "http-errors";
+import * as cors from "cors";
 
 import { indexRouter } from './routes/index';
 import { FaceDetection, FaceVerification } from "./ai-bridge/face-analytics";
@@ -15,10 +16,10 @@ let initAI = async () => {
     await FaceVerification.getInstance();
 }
 
-//initAI()
-//    .then(() => console.log('AI initialized'))
-//    .catch(err => console.log(`Failed to initialise AI: ${err}`));
-//    
+initAI()
+    .then(() => console.log('AI initialized'))
+    .catch(err => console.log(`Failed to initialise AI: ${err}`));
+    
 const app:express.Application = express();
 
 app.use(logger('dev'));
@@ -27,13 +28,18 @@ app.use(logger('dev'));
  */
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
-
+/** For CORS */
+app.use(cors());
+app.options('*', cors());
 /** Web demo static files */
 app.set('views', path.join(__dirname, '..', 'web-demo', 'views'));
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, '..', 'web-demo', 'public')));
 /* Add web ui endpoints */
 app.use('/', indexRouter);
+/** API endpoints */
+app.use('/api/face-detection', FaceDetectionService);
+app.use('/api/compare-faces', CompareFacesService);
 /** Error handler */
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -48,8 +54,5 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-/** API endpoints */
-app.use('/api/face-detection', FaceDetectionService);
-app.use('/api/compare-faces', CompareFacesService);
 
 export const App: express.Application = app;
