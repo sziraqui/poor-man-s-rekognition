@@ -1,3 +1,4 @@
+const CANVAS_MAX_WIDTH = 640;
 
 function setCanvasProp(c, strokeColor, fillColor, alpha, lineWidth, fontSize) {
     c.strokeStyle = strokeColor;
@@ -67,18 +68,27 @@ function encodeImageFileAsURL(inputElement, callback) {
     }
 }
 
-/** Source: https://stackoverflow.com/a/10906961/6699069 */
+/** Source: https://stackoverflow.com/a/10906961/6699069 (Modified)*/
 function renderImage(ctx, e, useDataUrl){
     var reader = new FileReader();
     reader.onload = function(event){
         var img = new Image();
         img.onload = function(){
             clearCanvas(ctx);
-            resize(ctx, img.width, img.height);
-            ctx.drawImage(img,0,0);
+            
+            if(img.width <= CANVAS_MAX_WIDTH) {
+                resize(ctx, img.naturalWidth, img.naturalHeight);
+                ctx.drawImage(img, 0, 0);
+            } else {
+                /** Scale down image to save memory on client*/
+                var aspectRatio = img.naturalHeight/img.naturalWidth;
+                var canvasHeight = Math.round(aspectRatio * CANVAS_MAX_WIDTH);
+                resize(ctx, CANVAS_MAX_WIDTH, canvasHeight);
+                ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, CANVAS_MAX_WIDTH, canvasHeight);
+            }
         }
         img.src = event.target.result;
-        useDataUrl(event.target.result);
+        useDataUrl(img.src);
     }
     reader.readAsDataURL(e.target.files[0]);     
 }
@@ -88,7 +98,16 @@ function renderImageFromUrl(ctx, url) {
     img.onload = function(){
         clearCanvas(ctx);
         resize(ctx, img.width, img.height);
-        ctx.drawImage(img, 0, 0);
+        if(img.width < CANVAS_MAX_WIDTH) {
+            resize(ctx, img.naturalWidth, img.naturalHeight);
+            ctx.drawImage(img, 0, 0);
+        } else {
+            /** Scale down image to save memory on client*/
+            var aspectRatio = img.naturalHeight/img.naturalWidth;
+            var canvasHeight = Math.round(aspectRatio * CANVAS_MAX_WIDTH);
+            resize(ctx, CANVAS_MAX_WIDTH, canvasHeight);
+            ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, CANVAS_MAX_WIDTH, canvasHeight);
+        }
     }
     img.src = url;
 }
