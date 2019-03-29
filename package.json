@@ -28,7 +28,7 @@
     "@types/numjs": "^0.14.4",
     "shelljs": "^0.8.3",
     "ts-node-dev": "^1.0.0-pre.32",
-    "typescript": "^2.6.1"
+    "typescript": "^3.3.3"
   },
   "engines": {
     "node": "^10.1.2"
