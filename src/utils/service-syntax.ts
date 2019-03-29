@@ -1,5 +1,4 @@
 import { CComparedFace, CFaceMatch, CFaceDetail, CComparedSourceImage } from "./amazon-rekog-dtypes";
-import { timingSafeEqual } from "crypto";
 
 /**
  * This modules prepares the service response/request objects

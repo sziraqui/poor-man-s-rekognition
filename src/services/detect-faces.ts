@@ -1,9 +1,9 @@
 import { Router } from 'express';
+
 import { FaceDetection } from '../ai-bridge/face-analytics';
 import { loadImage, imageToData } from '../utils/imageio';
-import { inherits } from 'util';
-import { CBoundingBox } from '../utils/amazon-rekog-dtypes';
 import { DetectFacesResponse } from '../utils/service-syntax';
+
 let router:Router = Router();
 
 let detector:FaceDetection;
