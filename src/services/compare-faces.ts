@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { FaceVerification } from '../ai-bridge/face-analytics';
-import { loadImage, imageToData } from '../utils/imageio';
+import { loadImage } from '../utils/imageio';
 
 let router:Router = Router();
 /**
@@ -23,8 +23,8 @@ router.get('/from-url', async function(req, res) {
         const htmlImgs = await Promise.all(
             [loadImage(sourceImage),
              loadImage(targetImage)]);
-        const sourceImageData = imageToData(htmlImgs[0]);
-        const targetImageData = imageToData(htmlImgs[1]);
+        const sourceImageData = htmlImgs[0];
+        const targetImageData = htmlImgs[1];
         let comparedFaces = await verifier.compareFaces(sourceImageData, targetImageData, similarityThreshold);
         
         res.send(JSON.stringify(comparedFaces));
@@ -56,8 +56,8 @@ router.post('/from-blob', async function(req, res) {
         const htmlImgs = await Promise.all(
             [loadImage(sourceImage),
              loadImage(targetImage)]);
-        const sourceImageData = imageToData(htmlImgs[0]);
-        const targetImageData = imageToData(htmlImgs[1]);
+        const sourceImageData = htmlImgs[0];
+        const targetImageData = htmlImgs[1];
         let comparedFaces = await verifier.compareFaces(sourceImageData, targetImageData, similarityThreshold);
         
         res.send(comparedFaces);

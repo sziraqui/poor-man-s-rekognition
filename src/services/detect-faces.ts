@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { FaceDetection } from '../ai-bridge/face-analytics';
-import { loadImage, imageToData } from '../utils/imageio';
+import { loadImage } from '../utils/imageio';
 import { DetectFacesResponse } from '../utils/service-syntax';
 
 let router:Router = Router();
@@ -17,7 +17,7 @@ router.get('/from-url', async function(req, res) {
     console.log(`imageUrl ${imageUrl}`);
     try {
         const image = await loadImage(imageUrl);
-        const imageData = imageToData(image);
+        const imageData = image;
         const detectFacesRes: DetectFacesResponse = await detector.detectFaces(imageData);
         res.send(JSON.stringify(detectFacesRes));
     } catch(err){
@@ -39,7 +39,7 @@ router.post('/from-blob', async function(req, res) {
     const dataUrl: string = req.body.Image.Bytes;
     try {
         const image = await loadImage(dataUrl);
-        const imageData = imageToData(image);
+        const imageData = image;
         const detectFacesRes: DetectFacesResponse = await detector.detectFaces(imageData);
         res.send(JSON.stringify(detectFacesRes));
     } catch(err){
