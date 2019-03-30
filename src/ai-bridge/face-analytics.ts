@@ -85,7 +85,7 @@ export class FaceVerification implements FaceVerifier {
     /**
      * @implements FaceVerifier.similarity()
      */
-    public async similarity(image1: ImageData, image2: ImageData, threshold: number): Promise<number> {
+    public async similarity(image1, image2, threshold: number): Promise<number> {
         let faces = await Promise.all([
             this.findLargestFace(image1), 
             this.findLargestFace(image2)

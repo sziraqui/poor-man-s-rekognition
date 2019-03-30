@@ -11,7 +11,7 @@ export interface FaceDetector {
      * @function detectAll
      * @param image Image as ndarray
      */
-    detectFaces(image: ImageData): Promise<DetectFacesResponse>
+    detectFaces(image): Promise<DetectFacesResponse>
  }
 
  export interface FaceVerifier {
@@ -22,7 +22,7 @@ export interface FaceDetector {
       * @param theshold similarity threshold
       * @returns float between [0,1] indicating similarity between two faces
       */
-     similarity(face1: ImageData, face2: ImageData, threshold: number): Promise<number>
+     similarity(face1, face2: ImageData, threshold: number): Promise<number>
 
      /**
       * Compare largest face in source with all faces in target
@@ -30,5 +30,5 @@ export interface FaceDetector {
       * @param target image containing target faces
       * @param threshold similarity threshold [0,1] 
       */
-     compareFaces(source: ImageData, target: ImageData, threshold: number): Promise<CompareFacesResponse>
+     compareFaces(source, target: ImageData, threshold: number): Promise<CompareFacesResponse>
  }
