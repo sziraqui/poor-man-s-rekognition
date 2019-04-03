@@ -5,27 +5,38 @@ export class VideoStream {
 
     private cap: cv.VideoCapture;
     public fps: number;
-    constructor(sourcePath: string) {
-        this.cap = new cv.VideoCapture(sourcePath);
+    public size: cv.Size
+    private open: boolean;
+   
+    constructor(size:cv.Size, source?: string) {
+        if(!source) this.cap = new cv.VideoCapture(0);
+        else this.cap = new cv.VideoCapture(source);
         this.fps = this.cap.get(cv.CAP_PROP_FPS);
+        this.open = true;
+        this.size = size;
     }
 
     public nextFrame(): cv.Mat {
-        return this.cap.read();
+        let frame = undefined;
+        let retry = 5;
+        while(!frame && retry > 0) {
+            frame = this.cap.read();
+            retry--;
+        }
+        if(!frame) {
+            frame = new cv.Mat(this.size.width, this.size.height, 0);
+            this.cap.release();
+            this.open = false;
+        }
+        return frame.resize(this.size);
     }
 
     public nextHtmlImage() {
         let frame = this.nextFrame();
-        if (frame) {
-            return matToHtmlImage(frame);
-        }
-        this.cap.release();
-        this.cap = undefined;
-        return new cv.Mat();
+        return matToHtmlImage(frame);
     }
 
     public isOpen() {
-       if (this.cap) return true;
-       else return false;
+       return this.open;
     }
 }
