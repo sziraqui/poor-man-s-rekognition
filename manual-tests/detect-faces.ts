@@ -1,15 +1,23 @@
-
+import { loadImage } from '../src/utils/imageio'; // important to put this line first
 import { FaceDetection } from '../src/ai-bridge/face-analytics';
-import { loadImage, imageToData } from '../src/utils/imageio';
+import { ArgumentParser } from 'argparse';
+
+let parser = new ArgumentParser({
+    addHelp: true,
+    description: 'Find all face bounding boxes for input image'
+});
+parser.addArgument('source', {
+    help: 'Source Image'
+});
+
+let args = parser.parseArgs();
 
 let init = async function(){
     let faceDetection: FaceDetection = await FaceDetection.getInstance();
-    let img = await loadImage('/home/sziraqui/Downloads/look-alike-faces.jpg');
-    let imageData = imageToData(img);
-    let bboxList = await faceDetection.detectAll(imageData);
-    console.log('bbox', bboxList);
+    let img = await loadImage(args.source);
+    
+    let bboxList = await faceDetection.detectFaces(img);
+    console.log(JSON.stringify(bboxList, null, 2));
 }
 /** First time will take few seconds */
-init();
-/** Second time should be quick if the singleton is implemented correctly */
 init();
