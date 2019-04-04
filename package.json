@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tensorflow/tfjs-node": "^1.0.3",
+    "@types/argparse": "^1.0.36",
+    "argparse": "^1.0.10",
     "canvas": "^2.0.1",
     "cors": "^2.8.5",
     "debug": "^2.6.9",

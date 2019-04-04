@@ -1,6 +1,5 @@
 import { CBoundingBox, CFaceDetail, CFaceMatch, CComparedFace } from "./amazon-rekog-dtypes";
 import * as cv from "opencv4nodejs";
-import { Point2 } from "opencv4nodejs";
 
 export class Rectangle {
     x: number /**Top left x */
@@ -28,12 +27,13 @@ export class Rectangle {
 }
 
 export class FaceBlob {
-    id: number;
+    id: number = -1;
     image: cv.Mat;
     rect: cv.Rect;
     confidence: number;
     matches: string;
     similarity: number;
+    frameNos = new Array<number>();
 
     constructor(image: cv.Mat, face: CFaceDetail | CFaceMatch | CComparedFace) {
         this.image = image;
@@ -49,7 +49,7 @@ export class FaceBlob {
         this.confidence = faceDetail.Confidence;
     }
 
-    setMatch(name: string, similarity, number) {
+    setMatch(name: string, similarity: number) {
         this.matches = name;
         this.similarity = similarity;
     }
@@ -58,8 +58,9 @@ export class FaceBlob {
         this.image.drawRectangle(this.rect, color);
         let text = `[${this.id}]`
         if (this.matches) {
-            text += `\n${this.matches}(${this.similarity}%)`;
+            text += `${this.matches}(${(this.similarity*100).toFixed(1)})`;
         }
-        this.image.putText(text, new Point2(padding, padding), cv.FONT_HERSHEY_SIMPLEX, 1, color);
+        this.image.putText(text, new cv.Point2(this.rect.x+padding, this.rect.y-padding), cv.FONT_HERSHEY_SIMPLEX, 0.5, color);
+        return this.image;
     }
 }

@@ -28,7 +28,12 @@ export class VideoStream {
             this.cap.release();
             this.open = false;
         }
-        return frame.resize(this.size);
+        try{
+            frame = frame.resize(this.size);
+        } catch(err) {
+            console.log(err.message);
+        }
+        return frame;
     }
 
     public nextHtmlImage() {

@@ -14,7 +14,7 @@ import * as faceApi from "face-api.js";
 import { FaceDetector, FaceVerifier } from "../ai-interface";
 import { CBoundingBox, CComparedFace, CFaceDetail, CFaceMatch, CComparedSourceImage } from "../utils/amazon-rekog-dtypes";
 import { DetectFacesResponse, CompareFacesResponse } from "../utils/service-syntax";
-import { MtcnnOptions, IFaceDetecion, Rect } from "face-api.js";
+import { MtcnnOptions, IFaceDetecion, Rect, TinyFaceDetectorOptions, SsdMobilenetv1Options } from "face-api.js";
 import { Rectangle } from "../utils/helper-dtypes";
 
 
@@ -26,6 +26,7 @@ export class FaceDetection implements FaceDetector {
     
     private static instance: FaceDetection;
     private static notInitialised: boolean = true;
+    public static detectorOptions;
     private constructor(){
     }
     
@@ -33,7 +34,8 @@ export class FaceDetection implements FaceDetector {
         if (this.notInitialised) {
             this.instance = new FaceDetection();
             const weightsPath = path.resolve(path.join(__dirname, '..', '..', 'weights'));
-            await faceApi.nets.mtcnn.loadFromDisk(weightsPath);
+            this.detectorOptions = new SsdMobilenetv1Options();
+            await faceApi.nets.ssdMobilenetv1.loadFromDisk(weightsPath);
             this.notInitialised = false;
             return this.instance;
         }
@@ -44,7 +46,7 @@ export class FaceDetection implements FaceDetector {
      * @param image any image that may contain face(s) 
      */
     async detectFaces(image): Promise<DetectFacesResponse> {
-        let faces = await faceApi.detectAllFaces(image, new MtcnnOptions());
+        let faces = await faceApi.detectAllFaces(image, FaceDetection.detectorOptions);
         let faceDetails: CFaceDetail[] = new Array<CFaceDetail>(faces.length);
         faces.forEach((face, index) => { 
             faceDetails[index] = new CFaceDetail(new CBoundingBox(new Rectangle(face.box.x, face.box.y, face.box.width, face.box.height), image.width, image.height), face.score);
@@ -79,8 +81,8 @@ export class FaceVerification implements FaceVerifier {
         return this.instance;
     }
 
-    private async findLargestFace(image) {
-        return await faceApi.detectSingleFace(image, new MtcnnOptions()).withFaceLandmarks().withFaceDescriptor();
+    public async findLargestFace(image) {
+        return await faceApi.detectSingleFace(image, FaceDetection.detectorOptions).withFaceLandmarks().withFaceDescriptor();
     }
     /**
      * @implements FaceVerifier.similarity()
@@ -96,8 +98,8 @@ export class FaceVerification implements FaceVerifier {
         return this.confidence(distance, threshold);
     }
     
-    private async findAllfaces(image) {
-        let faces = await faceApi.detectAllFaces(image, new MtcnnOptions).withFaceLandmarks().withFaceDescriptors();
+    public async findAllfaces(image) {
+        let faces = await faceApi.detectAllFaces(image, FaceDetection.detectorOptions).withFaceLandmarks().withFaceDescriptors();
         return faces;
     }
 
@@ -165,7 +167,7 @@ export class FaceVerification implements FaceVerifier {
      * @param distance 
      * @param threshold a threshold to give 0.5 confidence when distance == threshold
      */
-    private confidence(distance: number, threshold: number): number {
+    public confidence(distance: number, threshold: number): number {
         if (distance == 0) {
             return 1;
         }
