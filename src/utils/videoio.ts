@@ -17,13 +17,13 @@ export class VideoStream {
     }
 
     public nextFrame(): cv.Mat {
-        let frame = undefined;
+        let frame = new cv.Mat();
         let retry = 5;
-        while(!frame && retry > 0) {
+        while(frame.empty && retry > 0) {
             frame = this.cap.read();
             retry--;
         }
-        if(!frame) {
+        if(frame.empty) {
             frame = new cv.Mat(this.size.width, this.size.height, 0);
             this.cap.release();
             this.open = false;
