@@ -28,6 +28,8 @@ I have demonstrated Video Annotation feature and a REST API for PMR
 - Now run the example on sample input:      
 `ts-node manual-tests/video-recog.ts -r samples/karan_johar.jpg samples/Tiger-Shroff-3.jpg samples/tara-sutaria.jpg samples/ananya_pandey.jpg -n karan tiger tara ananya -t samples/kofee-with-karan-trim.mp4 -s 80 -d 0.9 -v true`
 
+    [![IMAGE ALT Video Annotation](https://img.youtube.com/vi/qBVa40Laan4/0.jpg)](https://www.youtube.com/watch?v=qBVa40Laan4)
+
 ---
 ## REST API Reference
 
