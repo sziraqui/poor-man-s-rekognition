@@ -1,23 +1,35 @@
 # Poor Man's Rekognition (POC for GSoC'19)
 A free and open source alternative to Amazon Rekognition       
-Currently uses [huan's node-facenet](https://github.com/huan/node-facenet), a Nodejs wrapper for the tensorflow implementation of [Facenet by davidsandberg](https://github.com/davidsandberg/facenet).
-My main focus is to make a REST API similar to Amazon Rekognition keeping the same request/response syntax. The server is written in TypeScript using ExpressJS.
+This branch uses [face-api.js](https://github.com/justadudewhohacks/face-api.js), with light weight tfjs implementations [Facenet](https://github.com/davidsandberg/facenet).
+I have demonstrated Video Annotation feature and a REST API for PMR
+
 ***
 [Check out LIVE demo](http://35.244.40.240:8080)
+
+### Implemented features
+- Face detection (via face-api.js)
+- Face recognition (via face-api.js)
+- Video annotation (opencv4nodejs and face-api.js)
+---
 ### Implemented APIs
 - DetectFaces
 - CompareFaces
 ---
 ### Setup
-- Ubuntu 18.04, Nodejs 10.15, Python 3.6
-- 4-6GB RAM is needed by Python Facenet model. 
-- Install packages: `python3-dev python3-pip python3-venv libsm6 make libxrender-dev`
-- Deactivate any python environment (important if your are using conda)
-- cd to cloned repository
+- Ubuntu 18.04, Nodejs 10.x
+- Install [OpenCV 3.x required packages](https://docs.opencv.org/3.4.6/d7/d9f/tutorial_linux_install.html)
+- `git clone https://github.com/sziraqui/poor-man-s-rekognition.git pmr`
+- `cd pmr`
 - `$ npm install`
 - Start server on any port (default 3000): `$ npm start`
+
+### Run video annotation example
+- Ensure you have ts-node installed `npm i -g ts-node-dev`
+- Now run the example on sample input:      
+`ts-node manual-tests/video-recog.ts -r samples/karan_johar.jpg samples/Tiger-Shroff-3.jpg samples/tara-sutaria.jpg samples/ananya_pandey.jpg -n karan tiger tara ananya -t samples/kofee-with-karan-trim.mp4 -s 80 -d 0.9 -v true`
+
 ---
-## API Reference
+## REST API Reference
 
 **Request header**      
     `"Content-Type": "application/json"`      
@@ -119,10 +131,9 @@ B. Using POST
     }
 ```
 
-### Credits
-These projects saved me a lot of time. I learn't TypeScript after reading huan's beautifully organised code.
-- [huan/node-facenet](https://github.com/huan/node-facenet)
-- [davidsandberg/facenet](https://github.com/davidsandberg/facenet)
+### Main libraries used
+- [face-api.js](https://github.com/justadudewhohacks/face-api.js)
+- [opencv4nodejs](https://github.com/justadudewhohacks/opencv4nodejs)
 
 ### GSoC
 This project is my Proof of Concept for [CCExtractor](https://www.ccextractor.org/public:gsoc:ideas_page_for_summer_of_code_2019)'s 'Poor Man's Rekognition' problem statement. Code reviews will be highly appreciated.

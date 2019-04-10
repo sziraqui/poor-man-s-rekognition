@@ -38,8 +38,8 @@ let args = parser.parseArgs();
 
 async function run() {
     let tracker = await new Tracker().init(args.refimages, args.names);
-    const faceBlobs = await tracker.track(args.target, new cv.Size(480, 360), args.similarity, args.distance, args.visualize);
-    faceBlobs.forEach((fb) => {
+    await tracker.track(args.target, new cv.Size(720, 480), args.similarity, args.distance, args.visualize);
+    tracker.faceBlobs.forEach((fb,i) => {
         console.log(`Label: ${fb.matches}`);
         console.log(`Frames: ${fb.frameNos}`);
     });
